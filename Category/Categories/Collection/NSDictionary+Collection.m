@@ -11,6 +11,30 @@
 
 @implementation NSDictionary (Collection)
 
+- (BOOL)isEmptyOrNull
+{
+    if (self == nil ||
+        self == NULL ||
+        [self isKindOfClass:[NSNull class]] ||
+        self.allKeys.count == 0) {
+        return YES;
+    }
+    return NO;
+}
+
++ (BOOL)isEmptyOrNull:(id<ICollectionAdapter>)parmars
+{
+    if (parmars == nil ||
+        parmars == NULL ||
+        [parmars isKindOfClass:[NSNull class]])
+    {
+        return YES;
+    }
+    if ([parmars isKindOfClass:[NSDictionary class]]) {
+        return [(NSDictionary *)parmars allKeys].count == 0;;
+    }
+    return NO;
+}
 //===================================
 #pragma mark - Converters
 //===================================

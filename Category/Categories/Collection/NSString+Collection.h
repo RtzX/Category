@@ -7,20 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ICollectionAdapter.h"
 
-@interface NSString (Collection)
+@interface NSString (Collection) <ICollectionAdapter>
 /**
  重复插入某个字符 count 次
  */
 + (NSString *)repeat:(NSString *)text count:(NSUInteger)count;
-
-/**
- 字符串是否为空 为nil null 都是空格 的情况下 都是空
- 如果是 @"" 则不是空
- */
-- (BOOL)isEmptyOrNull;
-+ (BOOL)isEmptyOrNull:(NSString *)string;
-
 /**
  将NSString根据分隔符转换为NSArray
  */

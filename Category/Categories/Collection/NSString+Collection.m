@@ -39,26 +39,28 @@
         return YES;
     }
     
-    if ([[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length]==0) {
+    if ([[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0) {
         return YES;
     }
     
     return NO;
 }
 
-+ (BOOL)isEmptyOrNull:(NSString *)string {
-    if (string == nil || string == NULL) {
++ (BOOL)isEmptyOrNull:(id<ICollectionAdapter>)parmars
+{
+    if (parmars == nil || parmars == NULL) {
         return YES;
     }
     
-    if ([string isKindOfClass:[NSNull class]]) {
+    if ([parmars isKindOfClass:[NSNull class]]) {
         return YES;
     }
     
-    if ([[string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length]==0) {
-        return YES;
+    if ([parmars isKindOfClass:[NSString class]]) {
+        if ([[(NSString *)parmars stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length] == 0) {
+            return YES;
+        }
     }
-    
     return NO;
 }
 

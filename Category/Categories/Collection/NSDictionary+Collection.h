@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ICollectionAdapter.h"
 
-@interface NSDictionary (Collection)
+@interface NSDictionary (Collection) <ICollectionAdapter>
 /**
  将2进制 data 数据转化为 字典
  */

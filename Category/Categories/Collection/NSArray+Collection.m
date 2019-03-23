@@ -13,6 +13,31 @@
 
 @implementation NSArray (Collection)
 
+- (BOOL)isEmptyOrNull
+{
+    if (self == nil ||
+        self == NULL ||
+        [self isKindOfClass:[NSNull class]] ||
+        self.count == 0) {
+        return YES;
+    }
+    return NO;
+}
+
++ (BOOL)isEmptyOrNull:(id<ICollectionAdapter>)parmars
+{
+    if (parmars == nil ||
+        parmars == NULL ||
+        [parmars isKindOfClass:[NSNull class]])
+    {
+        return YES;
+    }
+    if ([parmars isKindOfClass:[NSArray class]]) {
+        return [(NSArray *)parmars count] == 0;;
+    }
+    return NO;
+}
+
 - (NSArray<id> *_Nullable)filter:(BOOL (^_Nonnull)(id _Nonnull object))condition {
     if (condition) {
         return [self filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id _Nonnull evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {

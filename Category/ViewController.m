@@ -7,9 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "NSArray+Collection.h"
-#import "NSDictionary+Collection.h"
-
+#import "Collection.h"
 
 @interface ViewController ()
 
@@ -40,6 +38,13 @@
         return [object isEqualToString:@"6"];
     }];
     NSLog(@"");
+    
+    BOOL bn1 = [@[] isEmptyOrNull];
+    BOOL bn2 = [@{} isEmptyOrNull];
+    BOOL bn3 = [@"" isEmptyOrNull];
+    BOOL bn4 = [NSDictionary isEmptyOrNull:@{}];
+    NSLog(@"");
+
 }
 
 - (void)string

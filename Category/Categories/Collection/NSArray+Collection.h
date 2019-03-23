@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ICollectionAdapter.h"
 
 /// 保留策略
 typedef NS_ENUM(NSUInteger, ReserveStrategy) {
@@ -24,7 +25,7 @@ typedef NS_ENUM(NSUInteger, ReserveWeight) {
 /**
  if Source Array is nil all return nil else not return nil
  */
-@interface NSArray <T : id> (Collection)
+@interface NSArray <T : id> (Collection) <ICollectionAdapter>
 
 /**
  过滤
