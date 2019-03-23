@@ -14,7 +14,7 @@
 #define Date_yMd     @"yyyyMMdd"
 #define Date_yMdH    @"yyyyMMddHH"
 #define Date_yMdHm   @"yyyyMMddHHmm"
-#define Date_YMd   @"YYYY-MM-dd"
+#define Date_YMd   @"yyyy-MM-dd"
 
 
 @implementation DateTool
@@ -57,6 +57,110 @@
     }else {
         return timeStr;
     }
+}
+
++ (NSString *)dateToString:(NSDate *)date
+{
+    return [DateTool dateToString:date formatter:DateFormatterDefault];
+}
+
++ (NSString *)dateToString:(NSDate *)date formatter:(NSString *)formatter
+{
+    NSString *dateString = [[DateTool getLoaclFormatter: formatter] stringFromDate:date];
+    
+    return dateString;
+}
+
++ (NSDate *)dateStringToDate:(NSString *)dateString
+{
+    return [DateTool dateStringToDate:dateString formatter:DateFormatterDefault];
+}
+
++ (NSDate *)dateStringToDate:(NSString *)dateString formatter:(NSString *)formatter
+{
+    NSDate *date = [[DateTool getLoaclFormatter: formatter] dateFromString:dateString];
+    
+    return date;
+}
+
++ (NSString *)timesToString:(NSInteger)time
+{
+    return [DateTool timesToString:time formatter:DateFormatterDefault];
+}
+
++ (NSString *)timesToString:(NSInteger)time formatter:(NSString *)formatter
+{
+    return [DateTool timestampToString:[NSString stringWithFormat:@"%ld", time] formatter:formatter];
+}
+
++ (NSString *)timestampToString:(NSString *)stamp
+{
+    return [DateTool timestampToString:stamp formatter:DateFormatterDefault];
+}
+
++ (NSString *)timestampToString:(NSString *)stamp formatter:(NSString *)formatter
+{
+    if ([stamp isEmptyOrNull]) {
+        return @"2019-01-01 00:00:00";
+    }
+    // 秒级时间戳 1553337820  10位
+    // 毫秒级时间戳 1499825149257 13位
+    NSInteger current = [stamp integerValue];
+    if (stamp.length >= 13) {
+        current = current / 1000;
+    }
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:current];
+    NSString *confromTimespStr = [[DateTool getLoaclFormatter: formatter] stringFromDate:confromTimesp];
+    
+    return confromTimespStr;
+}
+
++ (NSDate *)timesToDate:(NSInteger)times
+{
+    return [DateTool timesToDate:times formatter:DateFormatterDefault];
+}
+
++ (NSDate *)timesToDate:(NSInteger)times formatter:(NSString *)formatter
+{
+    return [DateTool timestampToDate:[NSString stringWithFormat:@"%ld", times] formatter:formatter];
+}
+
++ (NSDate *)timestampToDate:(NSString *)stamp
+{
+    return [DateTool timestampToDate:stamp formatter:DateFormatterDefault];
+}
+
++ (NSDate *)timestampToDate:(NSString *)stamp formatter:(NSString *)formatter
+{
+    if ([stamp isEmptyOrNull]) {
+        return [NSDate date];
+    }
+    // 秒级时间戳 1553337820  10位
+    // 毫秒级时间戳 1499825149257 13位
+    NSInteger current = [stamp integerValue];
+    if (stamp.length >= 13) {
+        current = current / 1000;
+    }
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:current];
+
+    return confromTimesp;
+}
+
++ (NSDateFormatter *)getLoaclFormatter:(NSString *)formatter
+{
+    NSDateFormatter *matter = [[NSDateFormatter alloc] init];
+    
+    [matter setDateStyle:NSDateFormatterMediumStyle];
+    
+    [matter setTimeStyle:NSDateFormatterShortStyle];
+    
+    [matter setDateFormat:formatter];
+    
+    NSTimeZone* timeZone = [NSTimeZone timeZoneWithName:@"Asia/Beijing"];
+    
+    [matter setTimeZone:timeZone];
+    
+    return matter;
 }
 
 /**
@@ -617,19 +721,21 @@
  @param day 日
  @return 农历月份
  */
-+(NSString *)chineseMonthForYear:(NSInteger )year andMonth:(NSInteger)month andDay:(NSInteger )day{
-    if(month<1||month>12){
++ (NSString *)chineseMonthForYear:(NSInteger )year andMonth:(NSInteger)month andDay:(NSInteger )day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return nil;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return nil;
     }
-    NSString *dateString=[NSString stringWithFormat:@"%0.4ld%0.2ld%0.2ld",year,month,day];
-    NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
-    dateFormatter.dateFormat=@"yyyyMMdd";
+    NSString *dateString = [NSString stringWithFormat:@"%0.4ld%0.2ld%0.2ld",year,month,day];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    dateFormatter.dateFormat = Date_yMd;
     NSDate *date=[dateFormatter dateFromString:dateString];
+    
     return [DateTool chineseMonthForDate:date];
 }
 /**
@@ -638,18 +744,20 @@
  @param date 日期
  @return 农历日
  */
-+(NSString *)chineseDayForDate:(NSDate *)date{
-    if(date==nil){
++ (NSString *)chineseDayForDate:(NSDate *)date
+{
+    if(date == nil){
         ToolLog(@"date不能为空");
         return nil;
     }
-    NSArray *  dayArr = [NSArray arrayWithObjects:
+    NSArray *dayArr = [NSArray arrayWithObjects:
                          @"初一", @"初二", @"初三", @"初四",@"初五", @"初六", @"初七", @"初八", @"初九", @"初十",@"十一", @"十二", @"十三", @"十四", @"十五", @"十六", @"十七", @"十八", @"十九", @"二十",@"廿一", @"廿二", @"廿三", @"廿四", @"廿五", @"廿六", @"廿七", @"廿八", @"廿九", @"三十",  nil];
     unsigned unitFlags =  NSCalendarUnitMonth |  NSCalendarUnitDay;
     NSCalendar *localeCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierChinese];
     NSDateComponents *localeComp = [localeCalendar components:unitFlags fromDate:date];
     
     NSString *dayString = [dayArr objectAtIndex:localeComp.day-1];
+    
     return dayString;
 }
 /**
@@ -660,19 +768,22 @@
  @param day 日
  @return 农历日
  */
-+(NSString* )chineseDayForYear:(NSInteger )year andMonth:(NSInteger)month andDay:(NSInteger )day{
-    if(month<1||month>12){
++ (NSString* )chineseDayForYear:(NSInteger )year andMonth:(NSInteger)month andDay:(NSInteger )day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return nil;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return nil;
     }
+    
     NSString *dateString=[NSString stringWithFormat:@"%0.4ld%0.2ld%0.2ld",year,month,day];
     NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
-    dateFormatter.dateFormat=@"yyyyMMdd";
+    dateFormatter.dateFormat = Date_yMd;
     NSDate *date=[dateFormatter dateFromString:dateString];
+    
     return [DateTool chineseDayForDate:date];
 }
 #pragma mark 日期计算
@@ -683,13 +794,13 @@
  @param year 年
  @return 上一个月的年份
  */
-+(NSInteger)getYearForBeforeMonthInYear:(NSInteger)year andMonth:(NSInteger)month{
-    
-    if(month<1||month>12){
++ (NSInteger)getYearForBeforeMonthInYear:(NSInteger)year andMonth:(NSInteger)month
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(month==1){
+    if(month == 1){
         return year-1;
     }else {
         return year;
@@ -702,12 +813,13 @@
  @param year 年
  @return 下一个月的年份
  */
-+(NSInteger)getYearForNextMonthInYear:(NSInteger)year andMonth:(NSInteger)month{
-    if(month<1||month>12){
++ (NSInteger)getYearForNextMonthInYear:(NSInteger)year andMonth:(NSInteger)month
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(month==12){
+    if(month == 12){
         return year+1;
     }else {
         return year;
@@ -720,15 +832,16 @@
  @param year 年
  @return 上一个月的月份
  */
-+(NSInteger)getMonthForBeforeMonthInYear:(NSInteger)year andMonth:(NSInteger)month{
-    if(month<1||month>12){
++ (NSInteger)getMonthForBeforeMonthInYear:(NSInteger)year andMonth:(NSInteger)month
+{
+    if( month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(month==1){
+    if(month == 1){
         return 12;
     }else {
-        return month-1;
+        return month - 1;
     }
 }
 /**
@@ -738,15 +851,16 @@
  @param year 年
  @return 下一个月的月份
  */
-+(NSInteger)getMonthForNextMonthInYear:(NSInteger)year andMonth:(NSInteger)month{
-    if(month<1||month>12){
++ (NSInteger)getMonthForNextMonthInYear:(NSInteger)year andMonth:(NSInteger)month
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(month==12){
+    if(month == 12){
         return 1;
     }else {
-        return month+1;
+        return month + 1;
     }
 }
 /**
@@ -757,16 +871,17 @@
  @param day 当前日
  @return 上一个日的年份
  */
-+(NSInteger)getYearForBeforeDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day{
-    if(month<1||month>12){
++ (NSInteger)getYearForBeforeDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return 0;
     }
-    if(month==1&&day==1){
+    if(month == 1 && day == 1){
         return year-1;
     }else{
         return year;
@@ -780,16 +895,17 @@
  @param day 当前日
  @return 下一日的年份
  */
-+(NSInteger)getYearForNextDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day{
-    if(month<1||month>12){
++ (NSInteger)getYearForNextDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return 0;
     }
-    if(month==12&&day==31){
+    if( month == 12 && day == 31){
         return year-1;
     }else{
         return year;
@@ -803,17 +919,18 @@
  @param day 当前日
  @return 上一日的月份
  */
-+(NSInteger)getMonthForBeforeDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day{
-    if(month<1||month>12){
++ (NSInteger)getMonthForBeforeDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return 0;
     }
-    if(day==1){
-        if(month==1){
+    if(day == 1){
+        if(month == 1){
             return 12;
             
         }else{
@@ -832,17 +949,18 @@
  @param day 当前日
  @return 下一日的月份
  */
-+(NSInteger)getMonthForNextDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day{
-    if(month<1||month>12){
++ (NSInteger)getMonthForNextDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return 0;
     }
-    if(day==[DateTool daysForYear:year andWithMonth:month]){
-        if(month==12){
+    if(day == [DateTool daysForYear:year andWithMonth:month]){
+        if(month == 12){
             return 1;
             
         }else{
@@ -861,17 +979,18 @@
  @param day 当前日
  @return 上一日的日
  */
-+(NSInteger)getDayForBeforeDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day{
-    if(month<1||month>12){
++ (NSInteger)getDayForBeforeDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return 0;
     }
-    if(day==1){
-        if(month==1){
+    if(day == 1){
+        if(month == 1){
             return 31;
         }else{
             return [DateTool daysForYear:year andWithMonth:month-1];
@@ -888,16 +1007,17 @@
  @param day 当前日
  @return 下一日的日
  */
-+(NSInteger)getDayForNextDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day{
-    if(month<1||month>12){
++ (NSInteger)getDayForNextDayInYear:(NSInteger)year andMonth:(NSInteger)month andDay:(NSInteger)day
+{
+    if(month < 1 || month > 12){
         ToolLog(@"月份超出范围");
         return 0;
     }
-    if(day<1||day>[DateTool daysForYear:year andWithMonth:month]){
+    if(day < 1 || day > [DateTool daysForYear:year andWithMonth:month]){
         ToolLog(@"日超出范围");
         return 0;
     }
-    if(day==[DateTool daysForYear:year andWithMonth:month]){
+    if(day == [DateTool daysForYear:year andWithMonth:month]){
         return 1;
     }else{
         return day+1;
@@ -911,23 +1031,24 @@
  *
  *  @return 字符串中的数字字符串
  */
-+(NSString *)getNumberFromString:(NSString *)string{
-    if(string==nil){
++ (NSString *)getNumberFromString:(NSString *)string
+{
+    if([string isEmptyOrNull]){
         ToolLog(@"字符串为空");
         return nil;
     }
-    NSString *numStr=string;
-    NSArray *numArr=@[@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9"];
+    NSString *numStr = string;
+    NSArray *numArr = @[@"0",@"1",@"2",@"3",@"4",@"5",@"6",@"7",@"8",@"9"];
     NSRange r;
-    for(int i=0;i<string.length;i++){
-        (void)(r.length=1),r.location=i;
-        NSString *sub=[string substringWithRange:r];
+    for(int i = 0;i<string.length;i++){
+        (void)(r.length = 1),r.location = i;
+        NSString *sub = [string substringWithRange:r];
         if(![numArr containsObject:sub]){
-            numStr=[numStr stringByReplacingCharactersInRange:r withString:@"-"];
+            numStr = [numStr stringByReplacingCharactersInRange:r withString:@"-"];
         }
     }
     while ([numStr containsString:@"-"]) {
-        numStr=[numStr stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        numStr = [numStr stringByReplacingOccurrencesOfString:@"-" withString:@""];
     }
     
     return numStr;

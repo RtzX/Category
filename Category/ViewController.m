@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "Collection.h"
+#import "DateTool.h"
 
 @interface ViewController ()
 
@@ -18,11 +19,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [self array];
+//    [self array];
     
 //    [self string];
 //
 //    [self dict];
+    
+    [self date];
+}
+
+- (void)date
+{
+    NSDate *now = [NSDate date];
+    NSString * ss = [DateTool dateToString:now];
+    NSDate *dd = [DateTool dateStringToDate:ss];
+    NSString *tt = [DateTool timesToString:1499825149257];
+    NSDate *date = [DateTool timestampToDate:@"1553339370"];
+    NSDate *dat = [DateTool timesToDate:1553339370];
+    NSLog(@"");
 }
 
 - (void)array

@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#define DateFormatterDefault @"yyyy-MM-dd HH:mm:ss"
+
 /**
- 获取时间
+ 获取时间  所有的时间 都以北京时间 东八区 为主!!
  */
 @protocol IDateAdapter <NSObject>
 @optional
@@ -38,7 +40,104 @@
  时间转换
  */
 @protocol IDateConvert <NSObject>
+#pragma mark --- 时间转换
 @required
+/**
+ 时间对象 转 时间格式字符串
+ 
+ @param date 时间对象 formatter 时间格式 默认 yyyy-MM-dd HHmmss
+ @return 时间格式 字符串 Date => @"2019-03-23 18:24:24"  YYYY-MM-dd HH:mm:ss
+ */
++ (NSString *)dateToString:(NSDate *)date;
+/**
+ 时间对象 转 时间格式字符串
+ 
+ @param date 时间对象
+ @param formatter 时间格式 默认 yyyy-MM-dd HHmmss
+ @return 时间格式 字符串 Date => @"2019-03-23 18:24:24"  YYYY-MM-dd HH:mm:ss
+ */
++ (NSString *)dateToString:(NSDate *)date formatter:(NSString *)formatter;
+
+/**
+ 时间字符串 转 时间对象
+ 
+ @param dateString 时间字符串 @"2019-03-23 17:56:12" formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间对象
+ */
++ (NSDate *)dateStringToDate:(NSString *)dateString;
+/**
+ 时间字符串 转 时间对象
+ 
+ @param dateString 时间字符串 @"2019-03-23 17:56:12"
+ @param formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间对象
+ */
++ (NSDate *)dateStringToDate:(NSString *)dateString formatter:(NSString *)formatter;
+
+/**
+ 时间戳 转 时间格式字符串
+ 
+ @param time 时间戳 毫秒 or 秒 formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间格式字符串 1553334972 => @"2019-03-23 17:56:12"
+ */
++ (NSString *)timesToString:(NSInteger)time;
+/**
+ 时间戳 转 时间格式字符串
+ 
+ @param time 时间戳 毫秒 or 秒
+ @param formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间格式字符串 1553334972 => @"2019-03-23 17:56:12"
+ */
++ (NSString *)timesToString:(NSInteger)time formatter:(NSString *)formatter;
+/**
+ 时间戳 转 时间格式字符串
+ 
+ @param stamp 时间戳 毫秒 or 秒 formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间格式字符串 1553334972 => @"2019-03-23 17:56:12"
+ */
++ (NSString *)timestampToString:(NSString *)stamp;
+/**
+ 时间戳 转 时间格式字符串
+ 
+ @param stamp 时间戳 毫秒 or 秒
+ @param formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间格式字符串 1553334972 => @"2019-03-23 17:56:12"
+ */
++ (NSString *)timestampToString:(NSString *)stamp formatter:(NSString *)formatter;
+
+/**
+ 时间戳 转 时间对象
+ 
+ @param times 时间戳 1553334972 int类型 formatter 时间格式 默认YYYY-MM-dd HH:mm:ss
+ @return 时间对象
+ */
++ (NSDate *)timesToDate:(NSInteger)times;
+/**
+ 时间戳 转 时间对象
+ 
+ @param times 时间戳 1553334972 int类型
+ @param formatter 时间格式 默认YYYY-MM-dd HH:mm:ss
+ @return 时间对象
+ */
++ (NSDate *)timesToDate:(NSInteger)times formatter:(NSString *)formatter;
+
+/**
+ 时间戳 转 时间对象
+ 
+ @param stamp 时间戳 1553334972 字符串类型 formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间对象
+ */
++ (NSDate *)timestampToDate:(NSString *)stamp;
+/**
+ 时间戳 转 时间对象
+ 
+ @param stamp 时间戳 1553334972 字符串类型
+ @param formatter 时间格式 默认 YYYY-MM-dd HH:mm:ss
+ @return 时间对象
+ */
++ (NSDate *)timestampToDate:(NSString *)stamp formatter:(NSString *)formatter;
+
+#pragma mark --- 时间转换
 /**
  将日期转换为标准时间字符串
  
@@ -46,7 +145,6 @@
  @return 标准时间字符串时间
  */
 +(NSString *)getFormatDateStringFromDate:(NSDate *)date;
-@optional
 /**
  将标准时间字符串转换为日期
  
