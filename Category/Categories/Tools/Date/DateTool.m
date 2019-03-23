@@ -109,7 +109,8 @@
     if (stamp.length >= 13) {
         current = current / 1000;
     }
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:current];
+    // 取了时间戳的绝对值
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:labs(current)];
     NSString *confromTimespStr = [[DateTool getLoaclFormatter: formatter] stringFromDate:confromTimesp];
     
     return confromTimespStr;
@@ -141,7 +142,8 @@
     if (stamp.length >= 13) {
         current = current / 1000;
     }
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:current];
+    // 取了时间戳的绝对值
+    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:labs(current)];
 
     return confromTimesp;
 }

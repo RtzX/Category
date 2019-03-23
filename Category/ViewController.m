@@ -30,12 +30,12 @@
 
 - (void)date
 {
-    NSDate *now = [NSDate date];
-    NSString * ss = [DateTool dateToString:now];
-    NSDate *dd = [DateTool dateStringToDate:ss];
-    NSString *tt = [DateTool timesToString:1499825149257];
-    NSDate *date = [DateTool timestampToDate:@"1553339370"];
-    NSDate *dat = [DateTool timesToDate:1553339370];
+//    NSDate *now = [NSDate date];
+//    NSString * ss = [DateTool dateToString:now];
+//    NSDate *dd = [DateTool dateStringToDate:ss];
+//    NSString *tt = [DateTool timesToString:1499825149257];
+//    NSDate *date = [DateTool timestampToDate:@"1553339370"];
+    NSDate *dat = [DateTool timesToDate:-1553339370];
     NSLog(@"");
 }
 
